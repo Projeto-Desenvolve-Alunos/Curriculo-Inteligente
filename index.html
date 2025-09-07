@@ -51,6 +51,31 @@ const App = () => {
     }
   };
 
+  // Funções para lidar com mudanças em itens de array (Experiência e Educação)
+  const handleItemChange = (e, index, section) => {
+    const { name, value } = e.target;
+    setResumeData(prev => {
+      const newItems = [...prev[section]];
+      newItems[index] = { ...newItems[index], [name]: value };
+      return { ...prev, [section]: newItems };
+    });
+  };
+
+  const handleAddItem = (section) => {
+    setResumeData(prev => {
+      const newItems = [...prev[section], {}];
+      return { ...prev, [section]: newItems };
+    });
+  };
+
+  const handleRemoveItem = (index, section) => {
+    setResumeData(prev => {
+      const newItems = prev[section].filter((_, i) => i !== index);
+      return { ...prev, [section]: newItems };
+    });
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans antialiased flex flex-col lg:flex-row">
       
@@ -62,6 +87,7 @@ const App = () => {
           </h1>
           
           <form className="space-y-6">
+            {/* Seção de Informações Pessoais */}
             <div className="flex flex-col">
               <label htmlFor="name" className="mb-2 font-medium text-gray-700">Nome Completo</label>
               <input
@@ -97,7 +123,9 @@ const App = () => {
                 className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               ></textarea>
             </div>
-
+            
+            {/* Seção de Contato */}
+            <h2 className="text-xl font-bold text-gray-800 pt-4">Contato</h2>
             <div className="flex flex-col">
               <label htmlFor="contact.email" className="mb-2 font-medium text-gray-700">Email</label>
               <input
@@ -109,10 +137,137 @@ const App = () => {
                 className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
+            <div className="flex flex-col">
+              <label htmlFor="contact.phone" className="mb-2 font-medium text-gray-700">Telefone</label>
+              <input
+                id="contact.phone"
+                type="tel"
+                name="contact.phone"
+                value={resumeData.contact.phone}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            {/* Seção de Experiência Profissional */}
+            <h2 className="text-xl font-bold text-gray-800 pt-4">Experiência Profissional</h2>
+            {resumeData.experience.map((exp, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveItem(index, 'experience')}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remover
+                  </button>
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Cargo</label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={exp.position}
+                    onChange={(e) => handleItemChange(e, index, 'experience')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Empresa</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={exp.company}
+                    onChange={(e) => handleItemChange(e, index, 'experience')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Duração</label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={exp.duration}
+                    onChange={(e) => handleItemChange(e, index, 'experience')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Descrição</label>
+                  <textarea
+                    name="description"
+                    rows="3"
+                    value={exp.description}
+                    onChange={(e) => handleItemChange(e, index, 'experience')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  ></textarea>
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => handleAddItem('experience')}
+              className="w-full py-3 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Adicionar Experiência
+            </button>
+            
+            {/* Seção de Educação */}
+            <h2 className="text-xl font-bold text-gray-800 pt-4">Educação</h2>
+            {resumeData.education.map((edu, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveItem(index, 'education')}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remover
+                  </button>
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Título</label>
+                  <input
+                    type="text"
+                    name="degree"
+                    value={edu.degree}
+                    onChange={(e) => handleItemChange(e, index, 'education')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Instituição</label>
+                  <input
+                    type="text"
+                    name="institution"
+                    value={edu.institution}
+                    onChange={(e) => handleItemChange(e, index, 'education')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium text-gray-700">Duração</label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={edu.duration}
+                    onChange={(e) => handleItemChange(e, index, 'education')}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => handleAddItem('education')}
+              className="w-full py-3 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Adicionar Educação
+            </button>
           </form>
 
           <p className="mt-8 text-sm text-gray-500">
-            *Este é um formulário de exemplo. Adicione mais campos como experiência, educação e habilidades.
+            *Este é o seu formulário. Todos os campos que você preencher serão refletidos no preview ao lado.
           </p>
         </div>
       </div>
