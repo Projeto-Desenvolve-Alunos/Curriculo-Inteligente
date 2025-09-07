@@ -1,13 +1,172 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+import React, { useState } from 'react';
+
+// O Tailwind CSS é carregado via script no index.html para este exemplo.
+
+// Componente principal da aplicação
+const App = () => {
+  // Estado para armazenar os dados do currículo
+  const [resumeData, setResumeData] = useState({
+    name: 'Seu Nome',
+    title: 'Seu Título Profissional',
+    contact: {
+      phone: '(99) 99999-9999',
+      email: 'seu.email@exemplo.com',
+    },
+    summary: 'Um breve resumo sobre sua experiência profissional.',
+    experience: [
+      {
+        company: 'Empresa Exemplo',
+        position: 'Desenvolvedor Frontend',
+        duration: 'Jan 2020 - Presente',
+        description: 'Desenvolvimento e manutenção de interfaces de usuário responsivas.',
+      },
+    ],
+    education: [
+      {
+        institution: 'Universidade Exemplo',
+        degree: 'Bacharel em Ciência da Computação',
+        duration: '2016 - 2019',
+      },
+    ],
+  });
+
+  // Função para lidar com a mudança nos campos do formulário
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // Lógica para lidar com campos aninhados (ex: contact.email)
+    const [mainKey, subKey] = name.split('.');
+    if (subKey) {
+      setResumeData(prev => ({
+        ...prev,
+        [mainKey]: {
+          ...prev[mainKey],
+          [subKey]: value,
+        },
+      }));
+    } else {
+      setResumeData(prev => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans antialiased flex flex-col lg:flex-row">
+      
+      {/* Coluna do Formulário (esquerda) */}
+      <div className="lg:w-1/2 p-6 lg:p-10 flex-shrink-0 lg:overflow-y-auto">
+        <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8">
+          <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
+            Construa Seu Currículo
+          </h1>
+          
+          <form className="space-y-6">
+            <div className="flex flex-col">
+              <label htmlFor="name" className="mb-2 font-medium text-gray-700">Nome Completo</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={resumeData.name}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="title" className="mb-2 font-medium text-gray-700">Título Profissional</label>
+              <input
+                id="title"
+                type="text"
+                name="title"
+                value={resumeData.title}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="summary" className="mb-2 font-medium text-gray-700">Resumo Profissional</label>
+              <textarea
+                id="summary"
+                name="summary"
+                rows="4"
+                value={resumeData.summary}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              ></textarea>
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="contact.email" className="mb-2 font-medium text-gray-700">Email</label>
+              <input
+                id="contact.email"
+                type="email"
+                name="contact.email"
+                value={resumeData.contact.email}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </form>
+
+          <p className="mt-8 text-sm text-gray-500">
+            *Este é um formulário de exemplo. Adicione mais campos como experiência, educação e habilidades.
+          </p>
+        </div>
+      </div>
+
+      {/* Coluna do Preview (direita) */}
+      <div className="lg:w-1/2 p-6 lg:p-10 flex-shrink-0 lg:overflow-y-auto">
+        <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">{resumeData.name}</h2>
+          <p className="text-xl text-gray-600 mb-6">{resumeData.title}</p>
+          
+          <hr className="border-t border-gray-200 mb-6" />
+
+          {/* Seção de Contato */}
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-gray-700 mb-3">Contato</h3>
+            <div className="flex flex-col space-y-2 text-gray-600">
+              <p>Email: {resumeData.contact.email}</p>
+              <p>Telefone: {resumeData.contact.phone}</p>
+            </div>
+          </div>
+          
+          {/* Seção de Resumo */}
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-gray-700 mb-3">Resumo</h3>
+            <p className="text-gray-600 leading-relaxed">{resumeData.summary}</p>
+          </div>
+
+          {/* Seção de Experiência */}
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-gray-700 mb-3">Experiência Profissional</h3>
+            {resumeData.experience.map((exp, index) => (
+              <div key={index} className="mb-4">
+                <h4 className="font-bold text-gray-800">{exp.position}</h4>
+                <p className="text-sm text-gray-500">{exp.company} | {exp.duration}</p>
+                <p className="text-gray-600 mt-2">{exp.description}</p>
+              </div>
+            ))}
+          </div>
+          
+          {/* Seção de Educação */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-3">Educação</h3>
+            {resumeData.education.map((edu, index) => (
+              <div key={index} className="mb-4">
+                <h4 className="font-bold text-gray-800">{edu.degree}</h4>
+                <p className="text-sm text-gray-500">{edu.institution} | {edu.duration}</p>
+              </div>
+            ))}
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
