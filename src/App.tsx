@@ -1,10 +1,12 @@
-const App = () => {
+import FormExperiencia from "./components/form/experience";
+
+function App() {
   return (
-    <>
-    Projeto CV Builder
-    </>
-  )
+    <div className="App">
+      <h1>Meu Currículo</h1>
+      <FormExperiencia />
+    </div>
+  );
 }
 
-
-export default App
+export default App;
