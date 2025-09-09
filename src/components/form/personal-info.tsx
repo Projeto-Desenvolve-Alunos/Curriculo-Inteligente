@@ -60,83 +60,33 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          Construir Currículo
-        </h1>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="name" className="mb-1 font-medium text-gray-700">
-            Nome Completo
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={resumeData.name}
-            onChange={handleChange}
-            className={`p-2 border rounded focus:outline-none focus:ring-2 ${
-              errors.name ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
-            }`}
-          />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-        </div>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Construir Currículo</h1>
+
+        {["name", "email", "phone", "linkedin"].map((field) => (
+          <div key={field} className="flex flex-col mb-4">
+            <label htmlFor={field} className="mb-1 font-medium text-gray-700">
+              {field === "name" ? "Nome Completo" :
+               field === "email" ? "Email" :
+               field === "phone" ? "Telefone" : "LinkedIn"}
+            </label>
+            <input
+              type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+              id={field}
+              name={field}
+              value={resumeData[field]}
+              onChange={handleChange}
+              className={`p-2 border rounded focus:outline-none focus:ring-2 ${
+                errors[field] ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
+              }`}
+            />
+            {errors[field] && <p className="text-red-500 text-sm">{errors[field]}</p>}
+          </div>
+        ))}
 
         <div className="flex flex-col mb-4">
-          <label htmlFor="email" className="mb-1 font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={resumeData.email}
-            onChange={handleChange}
-            className={`p-2 border rounded focus:outline-none focus:ring-2 ${
-              errors.email ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
-            }`}
-          />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-        </div>
-
-        <div className="flex flex-col mb-4">
-          <label htmlFor="phone" className="mb-1 font-medium text-gray-700">
-            Telefone
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={resumeData.phone}
-            onChange={handleChange}
-            className={`p-2 border rounded focus:outline-none focus:ring-2 ${
-              errors.phone ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
-            }`}
-          />
-          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
-        </div>
-
-        <div className="flex flex-col mb-4">
-          <label htmlFor="linkedin" className="mb-1 font-medium text-gray-700">
-            LinkedIn
-          </label>
-          <input
-            type="url"
-            id="linkedin"
-            name="linkedin"
-            value={resumeData.linkedin}
-            onChange={handleChange}
-            className={`p-2 border rounded focus:outline-none focus:ring-2 ${
-              errors.linkedin ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
-            }`}
-          />
-          {errors.linkedin && <p className="text-red-500 text-sm">{errors.linkedin}</p>}
-        </div>
-
-        <div className="flex flex-col mb-4">
-          <label htmlFor="summary" className="mb-1 font-medium text-gray-700">
-            Resumo Profissional
-          </label>
+          <label htmlFor="summary" className="mb-1 font-medium text-gray-700">Resumo Profissional</label>
           <textarea
             id="summary"
             name="summary"
@@ -149,15 +99,14 @@ const App = () => {
             }`}
           ></textarea>
           <div className="flex justify-between text-sm mt-1">
-            <span className="text-gray-500">
-              {resumeData.summary.length}/200 caracteres
-            </span>
+            <span className="text-gray-500">{resumeData.summary.length}/200 caracteres</span>
             {errors.summary && <span className="text-red-500">{errors.summary}</span>}
           </div>
         </div>
 
         <button
           type="button"
+          onClick={handleSubmit}
           className="w-full bg-indigo-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         >
           Salvar Dados
@@ -168,3 +117,4 @@ const App = () => {
 };
 
 export default App;
+   
