@@ -6,9 +6,3 @@
   ]
 }
 
-{
-  "compilerOptions": {
-  "jsx": "react-jsx", 
-  }
-  
-}
