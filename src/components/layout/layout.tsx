@@ -1,16 +1,14 @@
-import { ContainerCV, FormSection, PreviewSection } from "./layout.style";
+import { ContainerCV, FormSection, HeaderCV, PreviewSection } from "./layout.style";
 
 const Layout = () => {
   return (
-    <>
+    <div className="flex flex-col h-screen">
+      <HeaderCV />
       <ContainerCV>
-        <FormSection>
-          
-        </FormSection>
-        <PreviewSection>
-        </PreviewSection>
+        <FormSection />
+        <PreviewSection />
       </ContainerCV>
-    </>
+    </div>
   )
 }
 
