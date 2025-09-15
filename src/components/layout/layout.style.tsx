@@ -18,7 +18,7 @@ const HeaderCV = () => {
 
 const ContainerCV: React.FC<IChildrenProps> = ({ children }) => {
   return (
-    <div className="flex flex-1 w-full bg-slate-200 p-5">
+    <div className="flex flex-1 w-full overflow-y-auto  bg-slate-200 p-5">
       {children}
     </div>
   )
@@ -27,7 +27,7 @@ const ContainerCV: React.FC<IChildrenProps> = ({ children }) => {
 const FormSection: React.FC<IChildrenProps> = ({ children }) => {
   return (
     <div
-      className={`w-2/5 p-5 ${ThemeBorder.default} rounded-md bg-slate-100 text-black break-words overflow-y-auto`}
+      className={`w-2/5 p-5 ${ThemeBorder.default} rounded-md bg-slate-100 text-black break-words overflow-y-auto flex flex-col gap-3`}
     >
       {children}
     </div>

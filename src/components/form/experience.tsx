@@ -1,76 +1,50 @@
-import React, { useState } from "react";
+import type { TExperience } from "../../interfaces/form.interfaces";
+import { ThemeBorder, ThemeButton } from "../../styles/theme";
 
-interface Experiencia {
-  empresa: string;
-  cargo: string;
-  inicio: string;
-  fim: string;
-  atual: boolean;
-  descricao: string;
-}
+type ExperienceProps = {
+  value: TExperience[];
+  onChange: (experiencias: TExperience[]) => void;
+};
 
-const FormExperiencia: React.FC = () => {
-  const [experiencias, setExperiencias] = useState<Experiencia[]>([
-    { empresa: "", cargo: "", inicio: "", fim: "", atual: false, descricao: "" },
-  ]);
+const ExperienceForm = ({ value, onChange }: ExperienceProps) => {
+  const handleChange = (
+    index: number,
+    field: keyof TExperience,
+    newValue: string | boolean
+  ) => {
+    const copy = [...value];
+    const exp = { ...copy[index], [field]: newValue };
 
-  // Adicionar uma nova experiência
-  const adicionarExperiencia = () => {
-    setExperiencias([
-      ...experiencias,
+    if (field === "atual" && newValue === true) exp.fim = "";
+
+    if (field === "fim" && newValue) {
+      const inicio = new Date(copy[index].inicio);
+      const fim = new Date(newValue as string);
+      if (inicio && fim && fim < inicio) {
+        alert("A data final não pode ser anterior à data de início.");
+        exp.fim = "";
+      }
+    }
+
+    copy[index] = exp;
+    onChange(copy);
+  };
+
+  const addExperience = () => {
+    onChange([
+      ...value,
       { empresa: "", cargo: "", inicio: "", fim: "", atual: false, descricao: "" },
     ]);
   };
 
-  // Remover a última experiência
-  const removerUltimaExperiencia = () => {
-    if (experiencias.length > 1) {
-      setExperiencias(experiencias.slice(0, -1));
-    }
-  };
-
-  // Atualizar os campos de cada experiência
-  const handleChange = (index: number, field: keyof Experiencia, value: string | boolean) => {
-    const novasExperiencias = [...experiencias];
-    const experiencia = { ...novasExperiencias[index], [field]: value };
-
-    // Se marcar "trabalho atual", limpa o campo fim
-    if (field === "atual" && value === true) {
-      experiencia.fim = "";
-    }
-
-    // Validação: fim não pode ser antes do início
-    if (field === "fim" && value) {
-      const inicio = new Date(novasExperiencias[index].inicio);
-      const fim = new Date(value as string);
-
-      if (inicio && fim && fim < inicio) {
-        alert("A data final não pode ser anterior à data de início.");
-        experiencia.fim = "";
-      }
-    }
-
-    novasExperiencias[index] = experiencia;
-    setExperiencias(novasExperiencias);
-  };
-
-  const handleSubmit = () => {
-    for (const exp of experiencias) {
-      if (!exp.empresa || !exp.cargo || !exp.inicio) {
-        alert("Preencha os campos obrigatórios (Empresa, Cargo e Data de Início).");
-        return;
-      }
-    }
-    console.log("Experiências salvas:", experiencias);
-    alert("Experiências salvas com sucesso!");
+  const removeExperience = (index: number) => {
+    onChange(value.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white shadow rounded">
-      <h2 className="text-xl font-bold mb-4">Experiências Profissionais</h2>
-
-      {experiencias.map((exp, index) => (
-        <div key={index} className="border p-4 rounded mb-4 bg-gray-50">
+    <div className="flex flex-col gap-4">
+      {value.map((exp, index) => (
+        <div key={index} className="rounded border p-4">
           <h3 className="font-semibold mb-2">Experiência {index + 1}</h3>
 
           <input
@@ -78,8 +52,7 @@ const FormExperiencia: React.FC = () => {
             placeholder="Empresa"
             value={exp.empresa}
             onChange={(e) => handleChange(index, "empresa", e.target.value)}
-            className="w-full border p-2 mb-2 rounded"
-            required
+            className={`${ThemeBorder.default} w-full rounded mb-2 px-3 py-2`}
           />
 
           <input
@@ -87,8 +60,7 @@ const FormExperiencia: React.FC = () => {
             placeholder="Cargo"
             value={exp.cargo}
             onChange={(e) => handleChange(index, "cargo", e.target.value)}
-            className="w-full border p-2 mb-2 rounded"
-            required
+            className={`${ThemeBorder.default} w-full rounded mb-2 px-3 py-2`}
           />
 
           <div className="flex gap-2 mb-2">
@@ -96,16 +68,14 @@ const FormExperiencia: React.FC = () => {
               type="date"
               value={exp.inicio}
               onChange={(e) => handleChange(index, "inicio", e.target.value)}
-              className="border p-2 rounded w-1/2"
-              required
+              className={`${ThemeBorder.default} w-1/2 rounded px-3 py-2`}
             />
-
             <input
               type="date"
               value={exp.fim}
-              onChange={(e) => handleChange(index, "fim", e.target.value)}
-              className="border p-2 rounded w-1/2"
               disabled={exp.atual}
+              onChange={(e) => handleChange(index, "fim", e.target.value)}
+              className={`${ThemeBorder.default} w-1/2 rounded px-3 py-2`}
             />
           </div>
 
@@ -119,38 +89,31 @@ const FormExperiencia: React.FC = () => {
           </label>
 
           <textarea
-            placeholder="Descrição das atividades"
+            placeholder="Descrição"
             value={exp.descricao}
             onChange={(e) => handleChange(index, "descricao", e.target.value)}
-            className="w-full border p-2 rounded"
+            className={`${ThemeBorder.default} w-full rounded px-3 py-2`}
           />
+
+          <button
+            type="button"
+            onClick={() => removeExperience(index)}
+            className={`${ThemeButton.default} bg-red-600 mt-2 px-3 py-1 text-sm text-white hover:bg-red-500`}
+          >
+            🗑 Remover
+          </button>
         </div>
       ))}
 
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={adicionarExperiencia}
-        >
-          + Adicionar Experiência
-        </button>
-
-        <button
-          type="button"
-          onClick={removerUltimaExperiencia}
-        >
-          Remover Última
-        </button>
-
-        <button
-          type="button"
-          onClick={handleSubmit}
-        >
-          Salvar
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={addExperience}
+        className={`${ThemeButton.default} bg-indigo-600 px-3 py-2 text-white hover:bg-indigo-500`}
+      >
+        + Adicionar Experiência
+      </button>
     </div>
   );
 };
 
-export default FormExperiencia;
+export default ExperienceForm;
