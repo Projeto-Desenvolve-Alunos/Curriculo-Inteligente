@@ -8,6 +8,7 @@ export type TPersonalInfo = {
   email: string;
   phone: string;
   linkedin: string;
+  resumoProfissional?: string;
 };
 
 export type TExperience = {

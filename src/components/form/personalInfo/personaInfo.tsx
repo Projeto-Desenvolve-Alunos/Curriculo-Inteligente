@@ -19,7 +19,7 @@ const PersonalInfo = ({ value, onChange }: PersonalInfoProps) => {
 
   const inputs: {
     label: string;
-    field: keyof TPersonalInfo;
+    field: keyof Omit<TPersonalInfo, "resumoProfissional">;
     type: React.HTMLInputTypeAttribute;
   }[] = [
     { label: "Nome", field: "name", type: "text" },
