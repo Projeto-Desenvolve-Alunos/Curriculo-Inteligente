@@ -21,6 +21,7 @@ import type {
 } from "../../interfaces/form.interfaces";
 import { generateResume } from "../../services/gemini.service";
 import { apiKeyValue } from "../../config/envs/envVar";
+import { generatePdf } from "../../services/pdf.service";
 
 const initialPersonalInfo: TPersonalInfo = {
   name: "",
@@ -175,9 +176,61 @@ Responda APENAS com um objeto JSON válido, sem nenhum texto adicional. A estrut
     }
   };
 
+  const handleExportPdf = () => {
+    generatePdf("cv-preview-container");
+  };
+
   return (
     <div className="flex flex-col h-screen">
-      <HeaderCV onImprove={handleImprove} />
+      <HeaderCV onImprove={handleImprove} onExportPdf={handleExportPdf} />
+      <div
+        id="cv-preview-container"
+        className="p-6 text-black bg-white font-sans"
+        style={{ position: "absolute", left: "-9999px" }}
+      >
+        <h1 className="text-3xl font-bold mb-4">{personalInfo.name}</h1>
+        <p className="text-sm mb-2">
+          Email: {personalInfo.email} | Telefone: {personalInfo.phone} |
+          LinkedIn: {personalInfo.linkedin}
+        </p>
+
+        {personalInfo.resumoProfissional && (
+          <>
+            <h2 className="text-xl font-bold mt-6 mb-2">Resumo Profissional</h2>
+            <p>{personalInfo.resumoProfissional}</p>
+          </>
+        )}
+
+        {skills.length > 0 && (
+          <>
+            <h2 className="text-xl font-bold mt-6 mb-2">Habilidades</h2>
+            <ul className="list-disc ml-5">
+              {skills.map((skill) => (
+                <li key={skill.name}>
+                  {skill.name} - {skill.level}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {experiences.length > 0 && (
+          <>
+            <h2 className="text-xl font-bold mt-6 mb-2">Experiências</h2>
+            {experiences.map((exp, index) => (
+              <div key={index} className="mb-4">
+                <h3 className="text-lg font-semibold">
+                  {exp.cargo} em {exp.empresa}
+                </h3>
+                <p className="text-sm">
+                  {exp.inicio} até {exp.atual ? "Atualmente" : exp.fim || "—"}
+                </p>
+                <p className="text-sm">{exp.descricao}</p>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
       <ContainerCV>
         <FormSection>
           <div className="mb-6">

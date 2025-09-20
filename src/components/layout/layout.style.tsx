@@ -8,14 +8,22 @@ import type {
 } from "../../interfaces/form.interfaces";
 import { ThemeBorder, ThemeButton, ThemeTypography } from "../../styles/theme";
 
-const HeaderCV: React.FC<{ onImprove?: () => void }> = ({ onImprove }) => (
+const HeaderCV: React.FC<{
+  onImprove?: () => void;
+  onExportPdf?: () => void;
+}> = ({ onImprove, onExportPdf }) => (
   <div className="flex w-screen justify-between items-center bg-slate-200 p-5">
     <p className={`${ThemeTypography.default} text-2xl font-bold`}>
       Currículo Inteligente
     </p>
-    <button className={`${ThemeButton.default}`} onClick={onImprove}>
-      Melhoria com IA
-    </button>
+    <div>
+      <button className={`${ThemeButton.default} mr-2`} onClick={onImprove}>
+        Melhoria com IA
+      </button>
+      <button className={`${ThemeButton.default}`} onClick={onExportPdf}>
+        Gerar PDF
+      </button>
+    </div>
   </div>
 );
 
