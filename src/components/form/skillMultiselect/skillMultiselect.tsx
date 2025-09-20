@@ -8,7 +8,7 @@ import {
 import { useState, type ChangeEvent } from "react";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import type { TSkill } from "../../../interfaces/form.interfaces";
-import { ThemeBorder, ThemeButton, ThemeTypography } from "../../../styles/theme";
+import { ThemeBorder, ThemeButton } from "../../../styles/theme";
 import {
   SkillMultiSelectStyles,
   SkillName,
