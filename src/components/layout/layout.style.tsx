@@ -42,4 +42,12 @@ const PreviewSection: React.FC<IChildrenProps> = ({ children }) => {
   )
 }
 
-export { HeaderCV, ContainerCV, FormSection, PreviewSection }
+const FormLabels: React.FC<IChildrenProps> = ({children}) => {
+  return (
+    <p className={`${ThemeTypography.default} font-bold`}>
+      {children}
+    </p>
+  )
+}
+
+export { HeaderCV, ContainerCV, FormSection, PreviewSection, FormLabels }
